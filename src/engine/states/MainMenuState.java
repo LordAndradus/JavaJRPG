@@ -15,8 +15,10 @@ public class MainMenuState extends State
     {
         super();
 
+        layers.add(ux);
+
         ux.addButton("Start", new MenuButton("Start", 100, 100, 300, 100));
-        ux.addButton("Quit", new MenuButton("Quit", 100, 100, 300, 100));
+        ux.addButton("Quit", new MenuButton("Quit", 100, 300, 300, 100));
     }
 
     @Override
