@@ -16,7 +16,9 @@ public class GUI extends Drawable
 
     public GUI()
     {
-
+        buttons = new HashMap<>();
+        sliders = new HashMap<>();
+        textFields = new HashMap<>();
     }
 
     public HashMap<String, Button> getButtons()
