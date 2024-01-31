@@ -11,8 +11,8 @@ public class InputHandler implements MouseWheelListener, MouseListener, KeyListe
     //Supported keys
 
     //Mouse inputs
-    public Point mousePosition;
-    public boolean mouseLeftClick, mouseRightClick;
+    private Point mousePosition;
+    public boolean mouseLeftClick, mouseRightClick, mouseMiddleClick;
 
     MouseClick current = MouseClick.idle;
     public enum MouseClick
@@ -35,6 +35,11 @@ public class InputHandler implements MouseWheelListener, MouseListener, KeyListe
         mousePosition.y = MouseInfo.getPointerInfo().getLocation().y;
     }
 
+    public Point getMousePos()
+    {
+        return mousePosition;
+    }
+
     public void updateMousePosition(GameWindow gw)
     {
         mousePosition.x = MouseInfo.getPointerInfo().getLocation().x - gw.getLocationOnScreen().x;
@@ -49,6 +54,11 @@ public class InputHandler implements MouseWheelListener, MouseListener, KeyListe
     public int getMouseY()
     {
         return mousePosition.y;
+    }
+
+    public String mousePosToString()
+    {
+        return "(" + mousePosition.x + ", " + mousePosition.y + ")";
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +81,10 @@ public class InputHandler implements MouseWheelListener, MouseListener, KeyListe
 
     }
 
+    /**
+     * Booleans for simultaneous checks (IE Check if Left & Right)
+     * TODO: An enumerator for strict checks (IE ONLY left click, etc)
+     */
     @Override
     public void mouseClicked(MouseEvent e)
     {
@@ -82,6 +96,11 @@ public class InputHandler implements MouseWheelListener, MouseListener, KeyListe
         if(SwingUtilities.isRightMouseButton(e))
         {
             mouseRightClick = false;
+        }
+
+        if(SwingUtilities.isMiddleMouseButton(e))
+        {
+            mouseMiddleClick = false;
         }
     }
 
@@ -97,6 +116,11 @@ public class InputHandler implements MouseWheelListener, MouseListener, KeyListe
         {
             mouseRightClick = true;
         }
+
+        if(SwingUtilities.isMiddleMouseButton(e))
+        {
+            mouseMiddleClick = true;
+        }
     }
 
     @Override
@@ -110,6 +134,11 @@ public class InputHandler implements MouseWheelListener, MouseListener, KeyListe
         if(SwingUtilities.isRightMouseButton(e))
         {
             mouseRightClick = false;
+        }
+
+        if(SwingUtilities.isMiddleMouseButton(e))
+        {
+            mouseMiddleClick = false;
         }
     }
 

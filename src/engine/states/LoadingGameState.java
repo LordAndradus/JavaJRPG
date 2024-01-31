@@ -46,7 +46,6 @@ public class LoadingGameState extends State
     @Override
     public void update(InputHandler ih)
     {
-        System.out.println("Loading not finished");
         if(load.loadedFlag)
         {
             //Pop this state and add the Main Menu

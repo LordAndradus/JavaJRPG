@@ -2,6 +2,7 @@ package engine.states;
 
 import engine.GUI.Button.Button;
 import engine.GUI.GUI;
+import engine.GUI.Slider.Slider;
 import engine.input.InputHandler;
 import main.Drawable;
 import main.Main;
@@ -40,11 +41,27 @@ public abstract class State extends Drawable
         for(int i = 0; i < layers.size(); i++) layers.get(i).render(g2);
     }
 
+    public void changeScale()
+    {
+        ux.changeScale();
+    }
+
     public Button getButton(String key)
     {
         return ux.getButtons().get(key);
     }
 
+    public Slider getSlider(String key)
+    {
+        return ux.getSliders().get(key);
+    }
+
+    public TextField getTextField(String key)
+    {
+        return ux.getTextFields().get(key);
+    }
+
+    //Class specific methods to implement.
     public abstract void stateUpdate(InputHandler ih);
     public abstract void buttonFunction();
     public abstract void stateRender(Graphics2D g2);

@@ -17,6 +17,7 @@ public class GameWindow extends JPanel implements Runnable
     /**
      * Screen Settings
      * Supported resolutions
+     *    0 x    0 <- NOT SUPPORTED, this is to make it easier for resizing. TODO: Remove when added to gui
      *  640 x  360 <-  25.00% (0.2500)
      *  854 x  480 <-  44.51% (0.4451)
      * 1280 x  720 <- Target  (1.0000)
@@ -26,8 +27,9 @@ public class GameWindow extends JPanel implements Runnable
      * 2560 x 1440 <- 400.00% (4.0000)
      * 3840 x 2160 <- 900.00% (9.0000)
      */
-    int[][] supportedResolution = {{640, 360}, {854, 480}, {1280, 720}, {1366, 768}, {1600, 900}, {1920, 1080}, {2560, 1440}, {3840, 2160}};
-    public int screenWidth = 1280, screenHeight = 720;
+    //Temporary
+    int[][] supportedResolution = {{640, 360}, {854, 480}, {1280, 720}, {1366, 768}, {1600, 900}, {1920, 1080}, {2560, 1440}, {3840, 2160}, {0, 0}};
+    public int screenWidth = 1920, screenHeight = 1080;
     public int originalWidth = 1280, originalHeight = 720;
     public double resolutionScale;
     public double targetFPS = 144;
@@ -131,7 +133,7 @@ public class GameWindow extends JPanel implements Runnable
     {
         Graphics2D g2 = (Graphics2D) g;
 
-        clearCanvas(g2);
+        resetCanvas(g2);
 
         try
         {
@@ -144,7 +146,7 @@ public class GameWindow extends JPanel implements Runnable
         }
     }
 
-    public void clearCanvas(Graphics2D g2)
+    public void resetCanvas(Graphics2D g2)
     {
         g2.setColor(this.getBackground());
         g2.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -173,5 +175,40 @@ public class GameWindow extends JPanel implements Runnable
     public boolean listenForClose()
     {
         return gameThread.getState() == Thread.State.RUNNABLE;
+    }
+
+    public double scale()
+    {
+        return resolutionScale;
+    }
+
+    public void getNextResolution()
+    {
+        int i = 0;
+        for(i = 0; i < supportedResolution.length; i++)
+        {
+            if(supportedResolution[i][0] == screenWidth) break;
+        }
+
+        i++;
+
+        Main.println("Index: " + i + " | " + supportedResolution.length);
+        if(i == supportedResolution.length - 1) i = 0;
+
+        screenWidth = supportedResolution[i][0];
+        screenHeight = supportedResolution[i][1];
+
+        Main.resizeWindow(screenWidth, screenHeight);
+
+        resolutionScale = ((double) screenWidth / (double) originalWidth);
+
+        System.err.println("New scaling: " + String.format("%.2f", resolutionScale));
+
+        changeScale();
+    }
+
+    public void changeScale()
+    {
+        sm.peek().changeScale();
     }
 }

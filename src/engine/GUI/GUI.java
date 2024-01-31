@@ -55,4 +55,10 @@ public class GUI extends Drawable
         //for(String key : sliders.keySet()) sliders.get(key).render(g2);
         //for(String key : textFields.keySet()) textFields.get(key).render(g2);
     }
+
+    @Override
+    public void changeScale()
+    {
+        for(String key : buttons.keySet()) buttons.get(key).resize();
+    }
 }

@@ -9,7 +9,7 @@ public abstract class Button
 {
     Color transparent = new Color(0, 0, 0, 0);
     //Color buttonIdle = transparent;
-    Color buttonIdle = transparent;
+    Color buttonIdle = Color.black;
     Color buttonHover = transparent;
     Color buttonActive = transparent;
 
@@ -33,7 +33,8 @@ public abstract class Button
         idle,
         hover,
         activeLeft,
-        activeRight
+        activeRight,
+        activeMiddle
     }
 
     //Click side
@@ -48,8 +49,11 @@ public abstract class Button
 
     public Button(String text, int x, int y, int width, int height)
     {
-        x = (int) (x * Main.gw.resolutionScale);
-        y = (int) (y * Main.gw.resolutionScale);
+        x = (int) (x * Main.gw.scale());
+        y = (int) (y * Main.gw.scale());
+        width = (int) (width * Main.gw.scale());
+        height = (int) (height * Main.gw.scale());
+
         this.text = text;
 
         System.err.println("Adjusted. [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + "]");
@@ -61,17 +65,27 @@ public abstract class Button
         textY = y + 50;
     }
 
+    public void resize()
+    {
+        System.out.println("Screen width = " + Main.gw.getSize().width);
+        System.out.println("X=" + border.x + " | " + (int) (border.x * Main.gw.scale()));
+
+
+        border.x = (int) (border.x * Main.gw.scale());
+        border.y = (int) (border.y * Main.gw.scale());
+        border.width = (int) (border.width * Main.gw.scale());
+        border.height = (int) (border.height * Main.gw.scale());
+
+        body.x = (int) (body.x * Main.gw.scale());
+        body.y = (int) (body.y * Main.gw.scale());
+        body.width = (int) (body.width * Main.gw.scale());
+        body.height = (int) (body.height * Main.gw.scale());
+    }
+
     //Default functionality
     int count = 0;
     public void update(InputHandler ih)
     {
-        count++;
-        if(count >= 50000)
-        {
-            count -= 50000;
-            Main.println(status);
-        }
-
         if(mouseClick != click.none) mouseClick = click.none;
 
         updateState(ih);
@@ -92,10 +106,20 @@ public abstract class Button
         return mouseClick == click.middle;
     }
 
+    public boolean eitherClicked()
+    {
+        return mouseClick == click.left || mouseClick == click.right;
+    }
+
+    public boolean anyClicked()
+    {
+        return mouseClick != click.none;
+    }
+
     public void updateState(InputHandler ih)
     {
         //If active, then keep that status until not being clicked anymore, or if the mouse moves away
-        if(body.contains(ih.mousePosition))
+        if(body.contains(ih.getMousePos()))
         {
             if(status == state.activeLeft)
             {
@@ -108,15 +132,22 @@ public abstract class Button
                 if(ih.mouseRightClick) return;
                 else mouseClick = click.right;
             }
+
+            if(status == state.activeMiddle)
+            {
+                if(ih.mouseMiddleClick) return;
+                else mouseClick = click.right;
+            }
         }
 
         status = state.idle;
-        if(body.contains(ih.mousePosition))
+        if(body.contains(ih.getMousePos()))
         {
             status = state.hover;
 
             if(ih.mouseLeftClick) status = state.activeLeft;
             if(ih.mouseRightClick) status = state.activeRight;
+            if(ih.mouseMiddleClick) status = state.activeMiddle;
         }
     }
 
